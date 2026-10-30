@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <%- include('./partials/head', { titulo: 'Menús' }) %>
+</head>
+<body class="min-h-screen flex flex-col">
+  <%- include('./partials/navbar') %>
+
+  <main class="flex-grow max-w-4xl mx-auto p-4 sm:p-6 lg:p-8 w-full">
+    <h2 class="text-4xl font-bold text-primary mb-8 text-center">Gestión del menú</h2>
+
+    <div class="bg-white p-8 rounded-xl shadow-2xl border border-primary/10 mb-10">
+      <h3 id="titulo-form" class="text-2xl font-semibold text-primary mb-4">Nuevo menú</h3>
+
+      <% if (categorias.length === 0) { %>
+        <p class="mb-4 rounded-lg bg-accent/40 text-primary px-4 py-3 font-medium">
+          Primero necesitas una categoría. <a href="/categorias" class="underline font-semibold">Crear categoría</a>
+        </p>
+      <% } %>
+
+      <form id="crear-menu-form" novalidate>
+        <div class="mb-5">
+          <label for="nombre" class="block text-primary text-sm font-medium mb-2">Nombre del plato <span class="text-red-500">*</span></label>
+          <input type="text" id="nombre" name="nombre" required maxlength="100"
+            class="w-full px-4 py-2 border border-primary/30 rounded-lg focus:ring-accent focus:border-accent transition duration-150 bg-secondary/50"
+            placeholder="Ej: Hamburguesa clásica">
+        </div>
+        <div class="mb-5">
+          <label for="precio" class="block text-primary text-sm font-medium mb-2">Precio ($) <span class="text-red-500">*</span></label>
+          <input type="number" id="precio" name="precio" required step="0.01" min="0.01"
+            class="w-full px-4 py-2 border border-primary/30 rounded-lg focus:ring-accent focus:border-accent transition duration-150 bg-secondary/50"
+            placeholder="Ej: 12.50">
+        </div>
+        <div class="mb-5">
+          <label for="categoria" class="block text-primary text-sm font-medium mb-2">Categoría <span class="text-red-500">*</span></label>
+          <select id="categoria" name="categoria" required
+            class="w-full px-4 py-2 border border-primary/30 rounded-lg focus:ring-accent focus:border-accent transition duration-150 bg-secondary/50">
+            <option value="">-- Seleccione una categoría --</option>
+            <% categorias.forEach(categoria => { %>
+              <option value="<%= categoria._id %>"><%= categoria.nombre %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div class="mb-6">
+          <label for="descripcion" class="block text-primary text-sm font-medium mb-2">Descripción (opcional)</label>
+          <textarea id="descripcion" name="descripcion" rows="3" maxlength="300"
+            class="w-full px-4 py-2 border border-primary/30 rounded-lg focus:ring-accent focus:border-accent transition duration-150 bg-secondary/50"
+            placeholder="Ingredientes o preparación del plato."></textarea>
+        </div>
+        <div class="flex gap-3">
+          <button type="submit" id="btn-guardar"
+            class="flex-1 bg-primary text-secondary py-3 rounded-lg font-semibold text-lg hover:bg-primary/90 transition duration-300 shadow-xl shadow-primary/20">
+            Guardar plato en el menú
+          </button>
+          <button type="button" id="btn-cancelar" class="hidden px-5 py-3 rounded-lg font-semibold text-primary border border-primary/30 hover:bg-primary/5 transition duration-300">
+            Cancelar edición
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <h3 class="text-2xl font-semibold text-primary mb-4">Platos registrados</h3>
+    <% if (menus.length === 0) { %>
+      <div class="text-center py-10 bg-card-bg border border-primary/20 rounded-xl shadow-md">
+        <p class="text-lg text-primary/80 font-semibold">Aún no hay platos. Crea el primero con el formulario.</p>
+      </div>
+    <% } else { %>
+      <ul class="flex flex-col gap-3" id="lista-menus-admin">
+        <% menus.forEach(menu => { %>
+          <li class="bg-card-bg border border-primary/10 rounded-xl p-4 flex flex-wrap items-center justify-between gap-3 <%= menu.disponible ? '' : 'opacity-70' %>">
+            <div>
+              <p class="text-lg font-semibold text-primary">
+                <%= menu.nombre %>
+                <span class="ml-2 text-xs font-semibold px-2 py-1 rounded-full <%= menu.disponible ? 'bg-green-100 text-green-800' : 'bg-gray-200 text-gray-700' %>">
+                  <%= menu.disponible ? 'Disponible' : 'Desactivado' %>
+                </span>
+              </p>
+              <p class="text-sm text-primary/70">
+                <%= menu.categoria ? menu.categoria.nombre : 'Sin categoría' %> · $<%= menu.precio.toFixed(2) %>
+              </p>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <button type="button" data-accion="editar"
+                data-id="<%= menu._id %>"
+                data-nombre="<%= menu.nombre %>"
+                data-precio="<%= menu.precio %>"
+                data-categoria="<%= menu.categoria ? menu.categoria._id : '' %>"
+                data-descripcion="<%= menu.descripcion %>"
+                class="bg-accent text-primary px-3 py-1.5 rounded-lg font-semibold hover:brightness-95 transition">Editar</button>
+              <% if (menu.disponible) { %>
+                <button type="button" data-accion="desactivar" data-id="<%= menu._id %>"
+                  class="bg-primary text-secondary px-3 py-1.5 rounded-lg font-semibold hover:bg-primary/90 transition">Desactivar</button>
+              <% } else { %>
+                <button type="button" data-accion="activar" data-id="<%= menu._id %>"
+                  class="bg-green-700 text-white px-3 py-1.5 rounded-lg font-semibold hover:bg-green-800 transition">Reactivar</button>
+              <% } %>
+              <button type="button" data-accion="eliminar" data-id="<%= menu._id %>"
+                class="bg-red-700 text-white px-3 py-1.5 rounded-lg font-semibold hover:bg-red-800 transition">Eliminar</button>
+            </div>
+          </li>
+        <% }) %>
+      </ul>
+    <% } %>
+  </main>
+
+  <%- include('./partials/footer') %>
+  <script src="/js/menus.js" type="module"></script>
+</body>
+</html>

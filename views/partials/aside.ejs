@@ -1,0 +1,27 @@
+<div id="carrito-bar" class="hidden fixed inset-0 z-20 flex">
+  <div id="carrito-fondo" class="flex-1 bg-black/50"></div>
+  <div class="flex flex-col justify-between w-full max-w-sm bg-card-bg border-8 border-primary p-6">
+    <div>
+      <div class="flex items-center justify-between border-b-2 border-primary pb-2">
+        <h2 class="font-semibold text-2xl text-primary">Carrito</h2>
+        <button id="cerrar-carrito" type="button" aria-label="Cerrar carrito"
+          class="bg-transparent font-bold text-primary text-lg">X</button>
+      </div>
+      <div class="flex flex-col items-start mt-6">
+        <h3 class="font-semibold text-lg text-primary">Menús:</h3>
+        <div class="w-full overflow-y-auto max-h-[60vh]" id="lista-menus"></div>
+      </div>
+    </div>
+    <div>
+      <div class="w-full flex justify-between items-center border-t-2 border-primary mt-4 p-2">
+        <span class="text-lg font-bold text-black">Total:</span>
+        <span id="total-pedido" class="text-lg font-bold text-primary">0.00$</span>
+      </div>
+      <button id="btn-finalizar-pedido" type="button"
+        class="w-full bg-primary text-secondary py-2 rounded-lg font-semibold hover:bg-primary/90 transition duration-300 shadow-md">
+        Crear pedido
+      </button>
+    </div>
+  </div>
+</div>
+<script src="/js/aside.js" type="module"></script>

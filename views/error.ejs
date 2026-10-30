@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <%- include('./partials/head', { titulo: 'Error' }) %>
+</head>
+<body class="min-h-screen flex flex-col">
+  <%- include('./partials/navbar') %>
+  <main class="flex-grow max-w-2xl mx-auto p-4 sm:p-6 lg:p-8 w-full">
+    <div class="bg-card-bg border border-primary/20 rounded-xl p-10 text-center shadow-md">
+      <h2 class="text-3xl font-bold text-primary mb-2">No se pudo abrir esta página</h2>
+      <p class="text-primary/70 mb-6"><%= mensaje %></p>
+      <a href="/" class="inline-block bg-primary text-secondary px-4 py-2 rounded-lg font-semibold hover:bg-primary/90 transition duration-300">Volver al inicio</a>
+    </div>
+  </main>
+  <%- include('./partials/footer') %>
+</body>
+</html>

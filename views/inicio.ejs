@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <%- include('./partials/head', { titulo: 'Inicio' }) %>
+</head>
+<body class="min-h-screen flex flex-col">
+  <%- include('./partials/navbar') %>
+  <%- include('./partials/aside') %>
+
+  <main class="max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex-grow">
+    <h2 class="text-4xl font-bold text-primary mb-8 text-center">Nuestro Menú</h2>
+
+    <% if (menus.length === 0) { %>
+      <div class="text-center py-12 bg-card-bg border border-primary/20 rounded-xl shadow-md">
+        <p class="text-xl text-primary/80 font-semibold">Aún no hay platos disponibles en el menú.</p>
+        <a href="/menus" class="inline-block mt-4 bg-primary text-secondary px-4 py-2 rounded-lg font-semibold hover:bg-primary/90 transition duration-300">
+          Agregar un menú
+        </a>
+      </div>
+    <% } else { %>
+      <% Object.keys(grupos).forEach(nombreCategoria => { %>
+        <section class="mb-12">
+          <h3 class="text-3xl font-semibold text-primary border-b-2 border-accent pb-2 mb-6">
+            <%= nombreCategoria %>
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <% grupos[nombreCategoria].forEach(menu => { %>
+              <div class="bg-card-bg p-5 rounded-xl shadow-lg hover:shadow-xl transition duration-300 border border-primary/10 flex flex-col">
+                <div class="flex justify-between items-start mb-3 gap-2">
+                  <h4 class="text-xl font-bold text-primary leading-tight"><%= menu.nombre %></h4>
+                  <span class="text-2xl font-extrabold text-primary bg-accent/60 px-3 py-1 rounded-full">
+                    $<%= menu.precio.toFixed(2) %>
+                  </span>
+                </div>
+                <p class="text-primary/70 mb-4 flex-grow"><%= menu.descripcion || 'Sin descripción disponible.' %></p>
+                <button type="button"
+                  data-id="<%= menu._id %>"
+                  data-precio="<%= menu.precio %>"
+                  data-nombre="<%= menu.nombre %>"
+                  class="btn-menu w-full bg-primary text-secondary py-2 rounded-lg font-semibold hover:bg-primary/90 transition duration-300 shadow-md">
+                  Añadir al Pedido
+                </button>
+              </div>
+            <% }) %>
+          </div>
+        </section>
+      <% }) %>
+    <% } %>
+  </main>
+
+  <%- include('./partials/footer') %>
+  <script src="/js/inicio.js" type="module"></script>
+</body>
+</html>

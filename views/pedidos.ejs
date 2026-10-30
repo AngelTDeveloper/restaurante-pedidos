@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <%- include('./partials/head', { titulo: 'Pedidos' }) %>
+</head>
+<body class="min-h-screen flex flex-col">
+  <%- include('./partials/navbar') %>
+
+  <%
+    const colores = {
+      pendiente: 'bg-yellow-100 text-yellow-800',
+      en_preparacion: 'bg-orange-100 text-orange-800',
+      listo: 'bg-blue-100 text-blue-800',
+      entregado: 'bg-green-100 text-green-800',
+      cancelado: 'bg-red-100 text-red-800'
+    };
+  %>
+
+  <main class="flex-grow max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 w-full">
+    <h2 class="text-4xl font-bold text-primary mb-2 text-center">Pedidos</h2>
+    <p class="text-center text-primary/70 mb-8"><%= pedidos.length %> <%= pedidos.length === 1 ? 'pedido registrado' : 'pedidos registrados' %></p>
+
+    <% if (pedidos.length === 0) { %>
+      <div class="text-center py-12 bg-card-bg border border-primary/20 rounded-xl shadow-md">
+        <p class="text-xl text-primary/80 font-semibold">Todavía no hay pedidos.</p>
+        <a href="/" class="inline-block mt-4 bg-primary text-secondary px-4 py-2 rounded-lg font-semibold hover:bg-primary/90 transition duration-300">
+          Ir al menú
+        </a>
+      </div>
+    <% } else { %>
+      <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="lista-pedidos">
+        <% pedidos.forEach(pedido => {
+             // Agrupar menús repetidos: { nombre: cantidad }
+             const conteo = {};
+             pedido.menus.forEach(m => {
+               const nombre = m ? m.nombre : 'Menú eliminado';
+               conteo[nombre] = (conteo[nombre] || 0) + 1;
+             });
+             const fecha = new Date(pedido.fecha_creacion).toLocaleString('es-ES', { dateStyle: 'medium', timeStyle: 'short' });
+             const esFinal = ['entregado', 'cancelado'].includes(pedido.estado);
+        %>
+          <article class="bg-card-bg p-5 rounded-xl shadow-lg border border-primary/10 flex flex-col gap-3">
+            <div class="flex items-start justify-between gap-2">
+              <div>
+                <p class="text-sm text-primary/60">Pedido #<%= String(pedido._id).slice(-6).toUpperCase() %></p>
+                <p class="text-sm text-primary/60"><%= fecha %></p>
+              </div>
+              <span class="text-xs font-semibold px-2 py-1 rounded-full <%= colores[pedido.estado] %>">
+                <%= etiquetas[pedido.estado] %>
+              </span>
+            </div>
+
+            <ul class="text-primary">
+              <% Object.keys(conteo).forEach(nombre => { %>
+                <li class="flex justify-between"><span><%= conteo[nombre] %> × <%= nombre %></span></li>
+              <% }) %>
+            </ul>
+
+            <p class="text-xl font-extrabold text-primary border-t border-primary/20 pt-2">
+              Total: $<%= pedido.total.toFixed(2) %>
+            </p>
+
+            <div class="flex flex-wrap items-center gap-2 mt-auto">
+              <% if (esFinal) { %>
+                <span class="text-sm text-primary/60">Este pedido ya no se puede modificar.</span>
+              <% } else { %>
+                <label class="sr-only" for="estado-<%= pedido._id %>">Estado del pedido</label>
+                <select id="estado-<%= pedido._id %>" data-id="<%= pedido._id %>" data-actual="<%= pedido.estado %>"
+                  class="select-estado flex-1 px-3 py-1.5 border border-primary/30 rounded-lg bg-secondary/50">
+                  <% estados.forEach(estado => { %>
+                    <option value="<%= estado %>" <%= estado === pedido.estado ? 'selected' : '' %>><%= etiquetas[estado] %></option>
+                  <% }) %>
+                </select>
+              <% } %>
+              <button type="button" data-accion="eliminar" data-id="<%= pedido._id %>"
+                class="bg-red-700 text-white px-3 py-1.5 rounded-lg font-semibold hover:bg-red-800 transition">Eliminar</button>
+            </div>
+          </article>
+        <% }) %>
+      </section>
+    <% } %>
+  </main>
+
+  <%- include('./partials/footer') %>
+  <script src="/js/pedidos.js" type="module"></script>
+</body>
+</html>

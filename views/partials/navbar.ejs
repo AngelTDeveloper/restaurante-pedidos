@@ -1,0 +1,24 @@
+<header class="bg-primary shadow-lg sticky top-0 z-10">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-wrap gap-3 justify-between items-center">
+    <h1 class="text-3xl font-extrabold text-secondary tracking-wider">
+      El Rincón del Sabor
+    </h1>
+    <nav class="flex flex-wrap items-center gap-x-6 gap-y-2">
+      <a href="/" class="text-secondary hover:text-accent transition duration-300 font-medium">Inicio</a>
+      <a href="/categorias" class="text-secondary hover:text-accent transition duration-300 font-medium">Categorías</a>
+      <a href="/menus" class="text-secondary hover:text-accent transition duration-300 font-medium">Menús</a>
+      <a href="/pedidos" class="text-secondary hover:text-accent transition duration-300 font-medium">Pedidos</a>
+      <button id="carrito" type="button" aria-label="Ver carrito"
+        class="relative text-secondary hover:text-accent transition duration-300 font-medium">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.1 5H19M7 13v8a2 2 0 002 2h10a2 2 0 002-2v-3"></path>
+        </svg>
+        <span id="cantidad-pedidos"
+          class="absolute -top-2 -right-2 bg-accent text-primary text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
+      </button>
+    </nav>
+  </div>
+</header>
+<script src="/js/navbar.js" type="module"></script>
